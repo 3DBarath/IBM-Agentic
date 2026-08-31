@@ -1,0 +1,13 @@
+TNSDC_Internship project plan.pdf
+.env
+.env.*
+!.env.example
+.venv/
+env/
+__pycache__/
+*.pyc
+.pytest_cache/
+uploads/
+node_modules/
+dist/
+*.log
