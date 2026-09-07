@@ -31,8 +31,13 @@ app = FastAPI(
 
 # Mount static directory for high-speed local static serving
 STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
-STATIC_DIR.mkdir(parents=True, exist_ok=True)
-app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+try:
+    STATIC_DIR.mkdir(parents=True, exist_ok=True)
+except (OSError, PermissionError):
+    pass
+
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 class EvaluationTextRequest(BaseModel):
     candidate_name: Optional[str] = "Candidate"
