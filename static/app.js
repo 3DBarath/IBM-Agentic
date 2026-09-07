@@ -170,6 +170,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Pipeline Stepper Manual Accordion Toggle
+  const pipelineHeader = document.getElementById("pipelineHeader");
+  const pipelineCard = document.getElementById("pipelineCard");
+  if (pipelineHeader && pipelineCard) {
+    pipelineHeader.addEventListener("click", () => {
+      pipelineCard.classList.toggle("collapsed");
+    });
+  }
+
   // Tab switching (<5ms DOM update)
   document.querySelectorAll(".tab-link").forEach(button => {
     button.addEventListener("click", () => {
@@ -207,7 +216,10 @@ document.addEventListener("DOMContentLoaded", () => {
       appContainer.classList.add("state-evaluated");
     }
 
-    // Animate Pipeline tracker
+    // Animate Pipeline tracker (ensure expanded when running)
+    const pipelineCard = document.getElementById("pipelineCard");
+    if (pipelineCard) pipelineCard.classList.remove("collapsed");
+
     resetPipelineSteps();
     setStepState("step1", "active");
 
@@ -243,6 +255,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (badge) badge.textContent = "Completed";
 
       renderResults(data);
+
+      // Smoothly auto-collapse the stepper once evaluation completes
+      setTimeout(() => {
+        if (pipelineCard) {
+          pipelineCard.classList.add("collapsed");
+        }
+      }, 600);
     } catch (err) {
       alert(`Workflow Error: ${err.message}`);
       resetPipelineSteps();
