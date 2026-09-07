@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="editorial">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talent Intelligence — IBM Agentic AI</title>
+  <!-- Bespoke typography: Geist + Newsreader serif -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <!-- Header with Brand & Theme Selector -->
+  <header class="header-bar">
+    <div class="brand-section">
+      <div class="brand-mark">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+      </div>
+      <span class="brand-title">Recruitment Intelligence</span>
+      <span class="badge-tag tag-neutral">IBM TNSDC Track</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <!-- Theme Switcher Pill -->
+      <div class="theme-selector-group" role="group" aria-label="Theme selection">
+        <button class="theme-pill-btn active" id="themeBtnLight" type="button" data-theme-target="editorial-light">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          Light
+        </button>
+        <button class="theme-pill-btn" id="themeBtnDark" type="button" data-theme-target="editorial-dark">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          Dark
+        </button>
+      </div>
+
+      <!-- Presets -->
+      <div style="display: flex; gap: 6px;">
+        <button class="btn btn-secondary btn-sm" id="btnPrefillFullstack" type="button">
+          Preset: Senior AI Engineer
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btnPrefillJunior" type="button">
+          Preset: Python Dev
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Left Column: Input Specification Bento -->
+    <section class="bento-card" aria-label="Candidate Input Form">
+      <div class="card-title-row">
+        <h2 class="card-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Candidate & Role Parameters
+        </h2>
+      </div>
+
+      <form id="evaluationForm" style="display: flex; flex-direction: column; gap: 18px; width: 100%;">
+        <div class="form-grid-two-col">
+          <div class="form-field">
+            <label class="field-label" for="candidateName">Candidate Name</label>
+            <input type="text" id="candidateName" name="candidate_name" value="Alex Chen" required>
+          </div>
+          <div class="form-field">
+            <label class="field-label" for="targetRole">Target Role</label>
+            <input type="text" id="targetRole" name="target_role" value="Lead AI Systems Engineer" required>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="jobDescription">Target Job Description</label>
+          <textarea id="jobDescription" name="job_description" rows="4" placeholder="Enter target role requirements, core tech stack, and evaluation criteria..." required></textarea>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Candidate Resume (PDF)</label>
+          <div class="dropzone" id="dropArea">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <div class="dropzone-label" id="dropText">
+              <strong>Select PDF file</strong> or drag & drop resume
+            </div>
+            <input type="file" id="resumePdf" name="resume_pdf" accept=".pdf">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="resumeText">Or Raw Text Document</label>
+          <textarea id="resumeText" name="resume_text" rows="4" placeholder="Alternatively, paste plain resume text here..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnSubmit">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Execute LangGraph Workflow
+        </button>
+      </form>
+
+      <!-- Minimalist Pipeline Stepper -->
+      <div class="pipeline-list" id="pipelineStatus">
+        <div class="pipeline-step" id="step1">
+          <div class="step-bullet"></div>
+          <span>Node 1: PDF Parse & Document Section Chunking</span>
+        </div>
+        <div class="pipeline-step" id="step2">
+          <div class="step-bullet"></div>
+          <span>Node 2: Agentic RAG Indexing & Vector Search</span>
+        </div>
+        <div class="pipeline-step" id="step3">
+          <div class="step-bullet"></div>
+          <span>Node 3: Deterministic Fit Scoring & Gap Analysis</span>
+        </div>
+        <div class="pipeline-step" id="step4">
+          <div class="step-bullet"></div>
+          <span>Node 4: Multi-Round Interview Formulation</span>
+        </div>
+        <div class="pipeline-step" id="step5">
+          <div class="step-bullet"></div>
+          <span>Node 5: Synthesis of Executive Dossier</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Evaluation Dossier & Multi-Round Kit -->
+    <section class="bento-card" aria-label="Evaluation Dossier and Interview Kit">
+      <div class="card-title-row">
+        <h2 class="card-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          Multi-Round Talent Dossier
+        </h2>
+        <button class="btn btn-secondary btn-sm" id="btnCopyDossier" style="display: none;">
+          Copy Markdown
+        </button>
+      </div>
+
+      <div id="resultsContent" style="display: none; flex-direction: column; gap: 20px;">
+        <!-- Editorial Score Bento -->
+        <div class="score-bento">
+          <div style="text-align: center;">
+            <div class="score-num tabular-nums" id="scoreValue">0%</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px;">Fit Score</div>
+          </div>
+          <div class="score-meta">
+            <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-main);" id="recBanner">Recommendation: Pending</div>
+            <p id="candidateSummaryText" style="font-size: 0.85rem; color: var(--text-body); line-height: 1.5;"></p>
+            
+            <div style="margin-top: 4px;">
+              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em;">Verified Skills</div>
+              <div class="badge-row" id="matchedSkillsRow"></div>
+            </div>
+
+            <div style="margin-top: 4px;">
+              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em;">Missing Requirements</div>
+              <div class="badge-row" id="missingSkillsRow"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multi-Round Interview Tabs -->
+        <div>
+          <div class="tab-row">
+            <button class="tab-link active" data-round="round1">
+              R1: Recruiter Screen
+            </button>
+            <button class="tab-link" data-round="round2">
+              R2: Technical & Coding
+            </button>
+            <button class="tab-link" data-round="round3">
+              R3: System Architecture
+            </button>
+            <button class="tab-link" data-round="round4">
+              R4: Behavioral (STAR)
+            </button>
+          </div>
+
+          <div class="questions-stack" id="questionsContainer"></div>
+        </div>
+      </div>
+
+      <!-- Clean Empty State -->
+      <div class="empty-view" id="emptyState">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-subtle)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="12" y1="18" x2="12" y2="12"></line>
+          <line x1="9" y1="15" x2="15" y2="15"></line>
+        </svg>
+        <p>No evaluation active. Select a preset candidate above or upload a resume to initiate the 5-node LangGraph analysis.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
