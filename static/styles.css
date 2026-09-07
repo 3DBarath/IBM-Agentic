@@ -187,6 +187,9 @@ h1, h2, h3, h4 {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   font-weight: 500;
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
 }
 
 /* Theme Selector Control */

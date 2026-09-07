@@ -8,13 +8,17 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 def extract_text_from_pdf(pdf_path: str | Path) -> str:
-    """Extract raw text cleanly from a PDF file."""
+    """Extract raw text cleanly from a PDF file with smart whitespace normalization."""
     reader = PdfReader(str(pdf_path))
     pages_text = []
     for idx, page in enumerate(reader.pages):
         text = page.extract_text() or ""
         if text.strip():
-            pages_text.append(text.strip())
+            # Smart normalization for FlowCV / multi-column layouts where words are broken across vertical lines
+            normalized = re.sub(r'(\w)\n\s*(\w)', r'\1 \2', text)
+            normalized = re.sub(r'[ \t]+', ' ', normalized)
+            normalized = re.sub(r'\n{3,}', '\n\n', normalized)
+            pages_text.append(normalized.strip())
     return "\n\n".join(pages_text)
 
 def chunk_text(text: str, chunk_size: int = 500, overlap: int = 80) -> List[Dict[str, Any]]:

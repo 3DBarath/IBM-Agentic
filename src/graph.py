@@ -144,132 +144,147 @@ Respond ONLY with valid JSON. Do not include markdown codeblock backticks if pos
 
 
 # -------------------------------------------------------------
-# Node 4: Multi-Round Interview Kit Generator Node
+# Node 4: Multi-Round Interview Kit Generator Node (Concurrent Threads)
 # -------------------------------------------------------------
+from concurrent.futures import ThreadPoolExecutor
+
+def _fetch_round1_screening(jd: str, resume: str, metrics: Dict[str, Any], gaps: str) -> List[Dict[str, str]]:
+    """Worker Thread 1: Initial Recruiter Screening."""
+    prompt = f"""You are a Lead Technical Recruiter.
+Generate Round 1 (Initial Screening) questions for this candidate.
+Target Role & JD: {jd}
+Candidate Profile: {resume}
+Gaps: {gaps}
+
+Generate exactly 2-3 screening questions focusing on background, career trajectory, and role alignment.
+Return a valid JSON array only:
+[
+  {{"question": "...", "focus": "Motivation / Background / Logistics", "rubric": "Expected candidate response indicators"}}
+]
+Respond ONLY with the JSON array. Do not include extra text.
+"""
+    try:
+        raw = llm_client.invoke(prompt)
+        cleaned = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        data = json.loads(cleaned)
+        return data if isinstance(data, list) else []
+    except Exception as e:
+        logger.error(f"Thread 1 error: {e}")
+        primary = metrics["matched_skills"][0] if metrics["matched_skills"] else "Software Engineering"
+        return [
+            {"question": f"Can you walk us through your experience with {primary} and what motivated you to pursue this role?", "focus": "Motivation & Background", "rubric": "Clear career narrative and genuine role alignment."},
+            {"question": "What engineering team culture allows you to do your best work?", "focus": "Workplace Expectations", "rubric": "Alignment with collaborative ownership and fast delivery."}
+        ]
+
+def _fetch_round2_technical(jd: str, resume: str, metrics: Dict[str, Any], gaps: str) -> List[Dict[str, str]]:
+    """Worker Thread 2: Core Technical & DSA / Coding Screen."""
+    prompt = f"""You are a Senior Engineering Interviewer.
+Generate Round 2 (Technical & Coding Screen) questions for this candidate.
+Target Role & JD: {jd}
+Candidate Profile: {resume}
+Missing Requirements: {', '.join(metrics.get('missing_skills', []))}
+
+Generate exactly 2-3 specific technical/coding questions probing claimed skills and missing gaps.
+Return a valid JSON array only:
+[
+  {{"question": "...", "focus": "Core Language / DSA / Framework", "rubric": "Expected code efficiency, syntax depth, and edge cases"}}
+]
+Respond ONLY with the JSON array. Do not include extra text.
+"""
+    try:
+        raw = llm_client.invoke(prompt)
+        cleaned = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        data = json.loads(cleaned)
+        return data if isinstance(data, list) else []
+    except Exception as e:
+        logger.error(f"Thread 2 error: {e}")
+        primary = metrics["matched_skills"][0] if metrics["matched_skills"] else "Python"
+        missing = metrics["missing_skills"][0] if metrics["missing_skills"] else "distributed systems"
+        return [
+            {"question": f"How do you manage memory allocation, concurrency, and performance bottlenecks when building services in {primary}?", "focus": "Core Language & Profiling", "rubric": "Understands profiling tools, async runtime, and algorithmic complexity."},
+            {"question": f"This role requires {missing}. How have you approached quickly gaining mastery over new technologies in past projects?", "focus": "Technical Adaptability", "rubric": "Demonstrates structured learning, sandbox prototyping, and fast comprehension."}
+        ]
+
+def _fetch_round3_system_design(jd: str, resume: str, metrics: Dict[str, Any], gaps: str) -> List[Dict[str, str]]:
+    """Worker Thread 3: System Design & Architecture."""
+    prompt = f"""You are a Principal Software Architect.
+Generate Round 3 (System Architecture & Scalability) scenario questions for this candidate.
+Target Role & JD: {jd}
+Candidate Profile: {resume}
+
+Generate exactly 2 high-impact architecture and scalability scenarios relevant to the JD.
+Return a valid JSON array only:
+[
+  {{"question": "...", "focus": "Scalability & Resilience Trade-offs", "rubric": "Component breakdown, storage choice, caching, and failover strategy"}}
+]
+Respond ONLY with the JSON array. Do not include extra text.
+"""
+    try:
+        raw = llm_client.invoke(prompt)
+        cleaned = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        data = json.loads(cleaned)
+        return data if isinstance(data, list) else []
+    except Exception as e:
+        logger.error(f"Thread 3 error: {e}")
+        return [
+            {"question": "Design an asynchronous processing pipeline capable of ingesting 50,000 events/sec while guaranteeing zero message loss during worker crashes.", "focus": "Distributed Queues & Idempotency", "rubric": "Covers message brokers (Kafka/RabbitMQ), consumer groups, dead-letter queues, and at-least-once delivery."},
+            {"question": "How would you design the data storage and caching tier for a high-concurrency read-heavy microservice?", "focus": "Data Architecture & Cache Invalidation", "rubric": "Discusses Redis cache-aside vs write-through, DB read-replicas, and consistency trade-offs (CAP theorem)."}
+        ]
+
+def _fetch_round4_behavioral(jd: str, resume: str, metrics: Dict[str, Any], gaps: str) -> List[Dict[str, str]]:
+    """Worker Thread 4: Behavioral & Culture Fit (STAR Framework)."""
+    prompt = f"""You are an Engineering Director evaluating culture fit.
+Generate Round 4 (Behavioral / STAR Method) questions for this candidate.
+Target Role & JD: {jd}
+Candidate Profile: {resume}
+
+Generate exactly 2 behavioral questions using the STAR framework (Situation, Task, Action, Result).
+Return a valid JSON array only:
+[
+  {{"question": "...", "focus": "STAR: Ownership / Collaboration / Pressure", "rubric": "Candidate describes quantifiable action, constructive reflection, and team alignment"}}
+]
+Respond ONLY with the JSON array. Do not include extra text.
+"""
+    try:
+        raw = llm_client.invoke(prompt)
+        cleaned = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        data = json.loads(cleaned)
+        return data if isinstance(data, list) else []
+    except Exception as e:
+        logger.error(f"Thread 4 error: {e}")
+        return [
+            {"question": "Describe a project where you faced a tight production deadline and ambiguous requirements. How did you prioritize tasks and deliver?", "focus": "STAR: Execution & Ambiguity", "rubric": "Candidate describes proactive stakeholder communication, iterative delivery, and measurable outcomes."},
+            {"question": "Tell us about a technical disagreement you had with a team member. How did you resolve it?", "focus": "STAR: Empathy & Team Consensus", "rubric": "Focuses on benchmarks and shared goals rather than ego; shows collaborative leadership."}
+        ]
+
 def generate_interview_kit_node(state: CandidateState) -> Dict[str, Any]:
     """
-    Generate questions for 4 industry-standard tech interview rounds:
-    Round 1: Recruiter Screening
-    Round 2: Technical & Coding
-    Round 3: System Design & Architecture
-    Round 4: Behavioral (STAR)
+    Simultaneously execute 4 independent worker threads for the 4 interview rounds.
+    Reduces total question generation latency by up to ~4x.
     """
     jd = state["job_description"][:1200]
     resume = state["resume_text"][:2500]
     metrics = state["metrics"]
     gaps = state.get("skill_gap_analysis", "")
-    
-    prompt = f"""You are a Lead Hiring Architect and Talent Evaluator.
-Design a specialized, high-impact multi-round interview kit specifically tailored for this candidate and target role.
 
-Target Role & JD:
-{jd}
+    # Run 4 workers in parallel threads
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        f_r1 = executor.submit(_fetch_round1_screening, jd, resume, metrics, gaps)
+        f_r2 = executor.submit(_fetch_round2_technical, jd, resume, metrics, gaps)
+        f_r3 = executor.submit(_fetch_round3_system_design, jd, resume, metrics, gaps)
+        f_r4 = executor.submit(_fetch_round4_behavioral, jd, resume, metrics, gaps)
 
-Candidate Profile & Experience:
-{resume}
+        r1 = f_r1.result()
+        r2 = f_r2.result()
+        r3 = f_r3.result()
+        r4 = f_r4.result()
 
-Identified Skill Gaps:
-{gaps}
-
-Missing Requirements:
-{', '.join(metrics['missing_skills'])}
-
-Generate exactly 4 rounds in valid JSON format:
-{{
-  "round1_screening": [
-    {{"question": "Question text", "focus": "Motivation / Background / Logistics", "rubric": "What to look for in the candidate's answer"}},
-    {{"question": "Question text", "focus": "Role Alignment", "rubric": "Expected response criteria"}}
-  ],
-  "round2_technical": [
-    {{"question": "Specific technical / coding question probing their claimed skills or gaps", "focus": "Core Language / DSA / Framework", "rubric": "Strong answer indicators and code efficiency expectations"}},
-    {{"question": "Technical problem solving question", "focus": "Debugging / Problem Solving", "rubric": "Evaluation criteria"}}
-  ],
-  "round3_system_design": [
-    {{"question": "System design scenario relevant to the JD", "focus": "Scalability & Architecture Tradeoffs", "rubric": "Expected component breakdown and handling of constraints"}},
-    {{"question": "Data modeling or API design question", "focus": "Reliability & Data Flow", "rubric": "Key architectural considerations"}}
-  ],
-  "round4_behavioral": [
-    {{"question": "Behavioral question using the STAR method (Situation, Task, Action, Result)", "focus": "Ownership & Delivery under pressure", "rubric": "Clear ownership, quantifiable outcome, and constructive reflection"}},
-    {{"question": "Conflict resolution or technical disagreement question", "focus": "Collaboration & Communication", "rubric": "Empathetic, data-driven alignment"}}
-  ]
-}}
-
-Ensure each round has 2-3 highly specific, non-generic questions.
-Respond ONLY with the JSON object.
-"""
-    try:
-        raw_res = llm_client.invoke(prompt)
-        cleaned = raw_res.strip()
-        if cleaned.startswith("```json"):
-            cleaned = cleaned[7:]
-        if cleaned.startswith("```"):
-            cleaned = cleaned[3:]
-        if cleaned.endswith("```"):
-            cleaned = cleaned[:-3]
-        kit = json.loads(cleaned.strip())
-        
-        return {
-            "round1_screening": kit.get("round1_screening", []),
-            "round2_technical": kit.get("round2_technical", []),
-            "round3_system_design": kit.get("round3_system_design", []),
-            "round4_behavioral": kit.get("round4_behavioral", [])
-        }
-    except Exception as e:
-        logger.error(f"Interview kit fallback triggered: {e}")
-        # Deterministic rich fallback
-        primary_skill = metrics["matched_skills"][0] if metrics["matched_skills"] else "Software Engineering"
-        missing_skill = metrics["missing_skills"][0] if metrics["missing_skills"] else "production cloud systems"
-        
-        return {
-            "round1_screening": [
-                {
-                    "question": f"Can you walk us through the evolution of your work with {primary_skill} and how it prepared you for this role?",
-                    "focus": "Career Trajectory & Technical Breadth",
-                    "rubric": "Clear articulation of projects, ownership level, and motivation for the role."
-                },
-                {
-                    "question": "What is your target work environment and what types of engineering challenges keep you most engaged?",
-                    "focus": "Role Fit & Expectations",
-                    "rubric": "Alignment with team pace, autonomy, and technology stack."
-                }
-            ],
-            "round2_technical": [
-                {
-                    "question": f"How do you handle performance bottlenecks, state management, and memory overhead when implementing solutions in {primary_skill}?",
-                    "focus": "Deep Domain Knowledge",
-                    "rubric": "Understands profiling, async execution, caching strategies, and clean code principles."
-                },
-                {
-                    "question": f"We noticed our role emphasizes {missing_skill}. How have you approached quickly ramping up on unfamiliar tools or frameworks in past roles?",
-                    "focus": "Adaptability & Skill Gap Closure",
-                    "rubric": "Evidence of rapid self-directed learning, prototype building, and conceptual transfer."
-                }
-            ],
-            "round3_system_design": [
-                {
-                    "question": "Design an asynchronous background processing pipeline that can handle sudden 10x traffic spikes without losing incoming transactions.",
-                    "focus": "Scalability & Resilience",
-                    "rubric": "Mentions message queues (Kafka/RabbitMQ), idempotency, worker auto-scaling, and dead-letter queues."
-                },
-                {
-                    "question": "How would you design the data model and caching strategy for high-concurrency read-heavy microservices?",
-                    "focus": "Data Architecture & Trade-offs",
-                    "rubric": "Discusses cache invalidation, Redis vs DB replication, and consistency trade-offs (CAP theorem)."
-                }
-            ],
-            "round4_behavioral": [
-                {
-                    "question": "Describe a project where you faced tight deadlines and incomplete requirements. How did you prioritize tasks and deliver?",
-                    "focus": "STAR: Ownership & Ambiguity",
-                    "rubric": "Candidate describes proactive stakeholder alignment, incremental delivery, and concrete results."
-                },
-                {
-                    "question": "Tell us about a technical disagreement you had with a teammate. How did you resolve it?",
-                    "focus": "STAR: Collaboration & Empathy",
-                    "rubric": "Focuses on objective data/benchmarks rather than ego; shows constructive team-first attitude."
-                }
-            ]
-        }
+    return {
+        "round1_screening": r1,
+        "round2_technical": r2,
+        "round3_system_design": r3,
+        "round4_behavioral": r4
+    }
 
 
 # -------------------------------------------------------------

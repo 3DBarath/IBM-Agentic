@@ -1,0 +1,315 @@
+BARATH B Android Engineer
+ 
+·
+ 
+Kotlin Multiplatform
+ 
+·
+ 
+Full-Stack Backend barathjack77@gmail.com · +91 8015931576 · Trichy · github.com/3DBarath · linkedin.com/in/3dbarath SUMMARY Built and shipped 3 production apps — Android, Desktop, and backend — as a solo engineer still in college. Specializes in 
+Kotlin Multiplatform and full-stack Android systems,
+ 
+from custom TCP protocols to distributed Spring Boot backends serving 1,200 daily users.
+ 
+EDUCATION B.E Computer Science Engineering Expected 2027 Government College of Engineering Srirangam, Trichy · CGPA: 7.6 Relevant course: Operating Systems , Data structure , Algorithms , DPCO 
+SKILLS Mobile: Jetpack Compose · MVVM/MVI · Clean Architecture · Hilt/Dagger · Coroutines & Flow · Room · Retrofit · DataStore · 
+KMP
+ 
+·
+ 
+Compose Multiplatform
+ 
+·
+ 
+Firebase Backend: Spring Boot 3.5 · Spring Security · PostgreSQL · Flyway · JPA/Hibernate · JWT · ShedLock · Bucket4j · Caffeine Cache 
+·
+ 
+Docker DevOps
+ 
+&
+ 
+Tooling:
+ 
+Git
+ 
+·
+ 
+Fastlane
+ 
+·
+ 
+GitHub Actions
+ 
+·
+ 
+AUR packaging
+ 
+·
+ 
+Bash
+ 
+·
+ 
+SQLite
+ 
+·
+ 
+jarsigner
+ 
+·
+ 
+ADB Languages:
+ 
+Kotlin
+ 
+·
+ 
+C++
+ 
+·
+ 
+Python PROJECTS GCES Hostel Management System
+ 
+·
+ 
+Android
+ 
+·
+ 
+Spring Boot
+ 
+·
+ 
+PostgreSQL
+ 
+·
+ 
+Firebase Jan 2026
+ 
+–
+ 
+Mar 2026 End-to-end institutional app — the only meal and hostel management system for a 1,200-student government college. Live 
+on Play Store
+ 
+·
+ 
+1,200 DAU.
+ 
+●
+ 
+Multi-module Clean Architecture
+ 
+(:app Android,
+ 
+:server Spring Boot,
+ 
+:common shared DTOs)
+ 
+with Hilt DI scoping ViewModels,
+ 
+repositories,
+ 
+and singleton managers
+ 
+●
+ 
+Predictive meal engine;
+ 
+ShedLock distributed JDBC locks guarantee atomic midnight state transitions across server instances
+ 
+—
+ 
+zero race conditions at scale
+ 
+●
+ 
+Caffeine in-memory cache
+ 
++
+ 
+Bucket4j token-bucket rate limiting absorb rush-hour bursts,
+ 
+holding API response under sub-100ms at peak load
+ 
+●
+ 
+JWT stateless auth
+ 
++
+ 
+Spring Security;
+ 
+PostgreSQL with Flyway versioned migrations;
+ 
+deployed on Render
+ 
+(JAR)
+ 
+and HuggingFace Spaces
+ 
+(Docker)
+ 
+●
+ 
+Firebase FCM push,
+ 
+Crashlytics,
+ 
+Performance Monitoring;
+ 
+custom Circular Reveal theme transition in Compose URL: https://play.google.com/store/apps/details?id=com.barath.gceshostel 
+ConnectLnx
+ 
+·
+ 
+Kotlin Multiplatform
+ 
+·
+ 
+Compose Multiplatform
+ 
+·
+ 
+mDNS
+ 
+·
+ 
+ML Kit Dec 2025
+ 
+–
+ 
+Jan 2026 Fastest way to move files between devices — no cloud, no account, no limits. Ships to Android, Linux, and Windows from a 
+single codebase.
+ 
+●
+ 
+Custom binary TCP protocol with parallel multi-socket streaming
+ 
+—
+ 
+files chunked across up to 5
+ 
+concurrent connections for maximum LAN throughput
+ 
+●
+ 
+Zero-config discovery via mDNS on Android
+ 
+(NsdManager)
+ 
+and Desktop
+ 
+(jmDNS);
+ 
+QR code pairing as network-restriction fallback
+ 
+●
+ 
+Single codebase
+ 
+→
+ 
+4 distribution targets:
+ 
+Play Store
+ 
+(.aab),
+ 
+Linux
+ 
+(.deb),
+ 
+Windows
+ 
+(.msi via GitHub Actions),
+ 
+AUR
+ 
+(connectlnx-bin)
+ URL: https://connectlnx.web.app/ 
+Aztrox Release
+ 
+·
+ 
+Bash
+ 
+·
+ 
+SQLite
+ 
+·
+ 
+Fastlane
+ 
+·
+ 
+GitHub Actions
+ 
+·
+ 
+jarsigner
+ 
+·
+ 
+gh CLI Apr 2026 Custom CI/CD engine built because no existing tool understood the full Aztrox stack. Manages 3 live projects across 6 
+distribution targets.
+ 
+●
+ 
+Unified CLI handling build
+ 
+→
+ 
+sign
+ 
+→
+ 
+distribute lifecycle across Google Play,
+ 
+GitHub Releases,
+ 
+AUR,
+ 
+Render,
+ 
+HuggingFace Spaces,
+ 
+and Firebase
+ 
+●
+ 
+LIFO atomic rollback registry
+ 
+—
+ 
+pipeline failures auto-revert version bumps,
+ 
+gradle.properties,
+ 
+and git tags without manual intervention
+ 
+●
+ 
+Parallel build orchestration:
+ 
+.deb
+ 
++
+ 
+.aab built locally while a
+ 
+release/v{version}
+ 
+branch triggers GitHub Actions to build
+ 
+.msi simultaneously
+ 
+●
+ 
+Preflight health system validates dependencies,
+ 
+keystore passwords,
+ 
+.env vars;
+ 
+every release logged to SQLite with auto-generated HTML audit reports

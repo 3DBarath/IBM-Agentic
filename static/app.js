@@ -2,36 +2,51 @@
 let currentEvaluationData = null;
 let activeRoundKey = "round1";
 
-const SAMPLE_SENIOR_JD = `Role: Senior Agentic AI & Systems Engineer
+const BARATH_JD = `Role: Full-Stack Android & Distributed Backend Systems Engineer
 Requirements:
-- 4+ years building production applications in Python, FastAPI, and asynchronous architectures.
-- Deep hands-on experience with LangChain, LangGraph state machines, and Agentic RAG workflows.
-- Strong knowledge of Vector databases (ChromaDB, FAISS), embeddings, and semantic chunking.
-- Hands-on microservices deployment with Docker, Kubernetes, CI/CD, and Redis caching.
-- Familiarity with LLM deployment, prompt engineering, and tool calling under low latency constraints.`;
+- Strong hands-on proficiency in Kotlin, Kotlin Multiplatform (KMP), and modern Android (Jetpack Compose, Clean Architecture, Hilt, Coroutines).
+- Experience building high-performance backends with Spring Boot, Spring Security, PostgreSQL, and Flyway.
+- Deep understanding of distributed state transitions, atomic locks (e.g. ShedLock), in-memory caching (Caffeine), and rate limiting (Bucket4j).
+- Proven ability to design custom networking protocols (TCP/binary streaming, parallel sockets, mDNS discovery).
+- Solid DevOps foundation: Linux, Docker, Bash scripting, GitHub Actions CI/CD pipelines, and multi-platform packaging (.deb, .aab, .msi).`;
 
-const SAMPLE_SENIOR_RESUME = `Alex Chen - Senior Software Engineer
-Email: alex.chen@example.com | GitHub: github.com/alexchen-dev
+const BARATH_RESUME = `BARATH B
+Android Engineer · Kotlin Multiplatform · Full-Stack Backend
+barathjack77@gmail.com · +91 8015931576 · Trichy · github.com/3DBarath · linkedin.com/in/3dbarath
 
-PROFESSIONAL SUMMARY
-Senior Software Engineer with 5 years of experience architecting distributed backend services and Agentic AI applications in Python. Expert in LangChain, FastAPI, Docker, and Vector retrieval systems.
+SUMMARY
+Built and shipped 3 production apps — Android, Desktop, and backend — as a solo engineer still in college. Specializes in Kotlin Multiplatform and full-stack Android systems, from custom TCP protocols to distributed Spring Boot backends serving 1,200 daily users.
 
-EXPERIENCE
-Lead Backend Engineer | Nova Systems (2022 - Present)
-- Architected multi-agent customer routing workflow using LangChain and LangGraph, cutting ticket resolution time by 38%.
-- Built high-throughput semantic RAG pipeline using ChromaDB, processing 150k documents daily with sub-second retrieval.
-- Developed asynchronous microservices in Python and FastAPI, containerized with Docker and orchestrated via Kubernetes.
-- Integrated Redis cluster for low-latency session caching and distributed state management.
-
-Software Engineer | Apex Cloud Technologies (2019 - 2022)
-- Built RESTful APIs using Python, Flask, and PostgreSQL for enterprise analytics.
-- Automated CI/CD deployment pipelines on GitHub Actions, reducing release cycle time by 45%.
-- Implemented unit and integration test suites using PyTest with 90%+ code coverage.
+EDUCATION
+B.E Computer Science Engineering (Expected 2027)
+Government College of Engineering Srirangam, Trichy · CGPA: 7.6
+Relevant coursework: Operating Systems, Data Structures, Algorithms, DPCO
 
 SKILLS
-Languages & Frameworks: Python, FastAPI, Flask, SQL, Bash
-AI & Agents: LangChain, LangGraph, RAG, ChromaDB, HuggingFace, OpenAI API
-Infrastructure: Docker, Kubernetes, Git, GitHub Actions, Redis, PostgreSQL, Linux`;
+Mobile: Jetpack Compose · MVVM/MVI · Clean Architecture · Hilt/Dagger · Coroutines & Flow · Room · Retrofit · DataStore · KMP · Compose Multiplatform · Firebase
+Backend: Spring Boot 3.5 · Spring Security · PostgreSQL · Flyway · JPA/Hibernate · JWT · ShedLock · Bucket4j · Caffeine Cache · Docker
+DevOps & Tooling: Git · Fastlane · GitHub Actions · AUR packaging · Bash · SQLite · jarsigner · ADB
+Languages: Kotlin · C++ · Python
+
+PROJECTS
+1. GCES Hostel Management System (Android · Spring Boot · PostgreSQL · Firebase | Jan 2026 – Mar 2026)
+- End-to-end institutional app serving 1,200 DAU on Google Play Store.
+- Multi-module Clean Architecture (:app Android, :server Spring Boot, :common shared DTOs) with Hilt DI.
+- Predictive meal engine; ShedLock distributed JDBC locks guarantee atomic midnight state transitions across server instances — zero race conditions at scale.
+- Caffeine in-memory cache + Bucket4j token-bucket rate limiting absorb rush-hour bursts, holding API response under sub-100ms at peak load.
+- JWT stateless auth + Spring Security; PostgreSQL with Flyway versioned migrations; deployed on Render and HuggingFace Spaces (Docker).
+
+2. ConnectLnx (Kotlin Multiplatform · Compose Multiplatform · mDNS · ML Kit | Dec 2025 – Jan 2026)
+- Ships to Android, Linux, and Windows from a single codebase with no cloud, no account, no limits.
+- Custom binary TCP protocol with parallel multi-socket streaming — files chunked across up to 5 concurrent connections for maximum LAN throughput.
+- Zero-config discovery via mDNS on Android (NsdManager) and Desktop (jmDNS); QR code pairing as network-restriction fallback.
+- Single codebase → 4 distribution targets: Play Store (.aab), Linux (.deb), Windows (.msi via GitHub Actions), AUR (connectlnx-bin).
+
+3. Aztrox Release (Bash · SQLite · Fastlane · GitHub Actions · jarsigner · gh CLI | Apr 2026)
+- Custom CI/CD engine managing 3 live projects across 6 distribution targets.
+- Unified CLI handling build → sign → distribute lifecycle across Google Play, GitHub Releases, AUR, Render, HuggingFace Spaces, and Firebase.
+- LIFO atomic rollback registry — pipeline failures auto-revert version bumps, gradle.properties, and git tags without manual intervention.
+- Preflight health system validates dependencies, keystore passwords, .env vars; releases logged to SQLite with auto-generated HTML audit reports.`;
 
 const SAMPLE_JUNIOR_JD = `Role: Junior Python Backend Developer
 Requirements:
@@ -88,14 +103,19 @@ document.addEventListener("DOMContentLoaded", () => {
   themeBtnDark.addEventListener("click", () => setTheme("editorial-dark"));
 
   // Sample Presets (<5ms instant response)
-  document.getElementById("btnPrefillFullstack").addEventListener("click", () => {
-    document.getElementById("candidateName").value = "Alex Chen";
-    document.getElementById("targetRole").value = "Lead AI Systems Engineer";
-    document.getElementById("jobDescription").value = SAMPLE_SENIOR_JD;
-    document.getElementById("resumeText").value = SAMPLE_SENIOR_RESUME;
+  function loadBarathPreset() {
+    document.getElementById("candidateName").value = "Barath B";
+    document.getElementById("targetRole").value = "Full-Stack Android & Backend Systems Engineer";
+    document.getElementById("jobDescription").value = BARATH_JD;
+    document.getElementById("resumeText").value = BARATH_RESUME;
     fileInput.value = "";
     dropText.innerHTML = "<strong>Select PDF file</strong> or drag & drop resume";
-  });
+  }
+
+  document.getElementById("btnPrefillFullstack").addEventListener("click", loadBarathPreset);
+
+  // Auto-populate with Barath B on initial page load
+  loadBarathPreset();
 
   document.getElementById("btnPrefillJunior").addEventListener("click", () => {
     document.getElementById("candidateName").value = "Priya Sharma";
