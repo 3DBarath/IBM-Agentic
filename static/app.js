@@ -12,7 +12,7 @@ Requirements:
 
 const BARATH_RESUME = `BARATH B
 Android Engineer · Kotlin Multiplatform · Full-Stack Backend
-barathjack77@gmail.com · +91 8015931576 · Trichy · github.com/3DBarath · linkedin.com/in/3dbarath
+barathjack77@gmail.com · Trichy · github.com/3DBarath · linkedin.com/in/3dbarath
 
 SUMMARY
 Built and shipped 3 production apps — Android, Desktop, and backend — as a solo engineer still in college. Specializes in Kotlin Multiplatform and full-stack Android systems, from custom TCP protocols to distributed Spring Boot backends serving 1,200 daily users.
@@ -122,9 +122,23 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("targetRole").value = "Junior Python Developer";
     document.getElementById("jobDescription").value = SAMPLE_JUNIOR_JD;
     document.getElementById("resumeText").value = SAMPLE_JUNIOR_RESUME;
-    fileInput.value = "";
     dropText.innerHTML = "<strong>Select PDF file</strong> or drag & drop resume";
   });
+
+  function clearForm() {
+    document.getElementById("candidateName").value = "";
+    document.getElementById("targetRole").value = "";
+    document.getElementById("jobDescription").value = "";
+    document.getElementById("resumeText").value = "";
+    fileInput.value = "";
+    dropText.innerHTML = "<strong>Select PDF file</strong> or drag & drop resume";
+    document.getElementById("candidateName").focus();
+  }
+
+  const btnClearForm = document.getElementById("btnClearForm");
+  if (btnClearForm) {
+    btnClearForm.addEventListener("click", clearForm);
+  }
 
   // Dropzone file picking
   dropArea.addEventListener("click", () => fileInput.click());
@@ -186,8 +200,19 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSubmit.disabled = true;
     btnSubmit.textContent = "Evaluating Workflow...";
 
+    // Trigger smooth layout morph: expand from center to dual pane
+    const appContainer = document.getElementById("appContainer");
+    if (appContainer && appContainer.classList.contains("state-initial")) {
+      appContainer.classList.remove("state-initial");
+      appContainer.classList.add("state-evaluated");
+    }
+
+    // Animate Pipeline tracker
     resetPipelineSteps();
     setStepState("step1", "active");
+
+    const badge = document.getElementById("pipelineStatusBadge");
+    if (badge) badge.textContent = "Running";
 
     const timer1 = setTimeout(() => { setStepState("step1", "done"); setStepState("step2", "active"); }, 800);
     const timer2 = setTimeout(() => { setStepState("step2", "done"); setStepState("step3", "active"); }, 1800);
@@ -215,10 +240,13 @@ document.addEventListener("DOMContentLoaded", () => {
         setStepState(`step${i}`, "done");
       }
 
+      if (badge) badge.textContent = "Completed";
+
       renderResults(data);
     } catch (err) {
       alert(`Workflow Error: ${err.message}`);
       resetPipelineSteps();
+      if (badge) badge.textContent = "Failed";
     } finally {
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = `

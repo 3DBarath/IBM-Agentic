@@ -51,21 +51,28 @@
         </button>
       </div>
 
-      <!-- Presets -->
-      <div style="display: flex; gap: 6px;">
-        <button class="btn btn-secondary btn-sm" id="btnPrefillFullstack" type="button">
-          Default: Barath B (Full-Stack)
+      <!-- Presets & Actions -->
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <button class="btn btn-secondary btn-sm" id="btnPrefillFullstack" type="button" title="Load default Barath B profile">
+          Default: Barath B
         </button>
-        <button class="btn btn-secondary btn-sm" id="btnPrefillJunior" type="button">
+        <button class="btn btn-secondary btn-sm" id="btnPrefillJunior" type="button" title="Load sample Python Dev profile">
           Preset: Python Dev
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btnClearForm" type="button" title="Clear all input fields and reset">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          Clear
         </button>
       </div>
     </div>
   </header>
 
-  <main class="container">
+  <main class="container state-initial" id="appContainer">
     <!-- Left Column: Input Specification Bento -->
-    <section class="bento-card" aria-label="Candidate Input Form">
+    <section class="bento-card card-input" id="inputCard" aria-label="Candidate Input Form">
       <div class="card-title-row">
         <h2 class="card-title">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -122,34 +129,10 @@
           Execute LangGraph Workflow
         </button>
       </form>
-
-      <!-- Minimalist Pipeline Stepper -->
-      <div class="pipeline-list" id="pipelineStatus">
-        <div class="pipeline-step" id="step1">
-          <div class="step-bullet"></div>
-          <span>Node 1: PDF Parse & Document Section Chunking</span>
-        </div>
-        <div class="pipeline-step" id="step2">
-          <div class="step-bullet"></div>
-          <span>Node 2: Agentic RAG Indexing & Vector Search</span>
-        </div>
-        <div class="pipeline-step" id="step3">
-          <div class="step-bullet"></div>
-          <span>Node 3: Deterministic Fit Scoring & Gap Analysis</span>
-        </div>
-        <div class="pipeline-step" id="step4">
-          <div class="step-bullet"></div>
-          <span>Node 4: Multi-Round Interview Formulation</span>
-        </div>
-        <div class="pipeline-step" id="step5">
-          <div class="step-bullet"></div>
-          <span>Node 5: Synthesis of Executive Dossier</span>
-        </div>
-      </div>
     </section>
 
     <!-- Right Column: Evaluation Dossier & Multi-Round Kit -->
-    <section class="bento-card" aria-label="Evaluation Dossier and Interview Kit">
+    <section class="bento-card card-results" id="resultsCard" aria-label="Evaluation Dossier and Interview Kit">
       <div class="card-title-row">
         <h2 class="card-title">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -161,6 +144,38 @@
         <button class="btn btn-secondary btn-sm" id="btnCopyDossier" style="display: none;">
           Copy Markdown
         </button>
+      </div>
+
+      <!-- Live Execution Stepper (Shows immediately on right during evaluation) -->
+      <div class="pipeline-card" id="pipelineCard">
+        <div class="pipeline-header">
+          <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.03em;">
+            LangGraph State Execution
+          </span>
+          <span class="badge-tag" id="pipelineStatusBadge">Idle</span>
+        </div>
+        <div class="pipeline-list" id="pipelineStatus">
+          <div class="pipeline-step" id="step1">
+            <div class="step-bullet"></div>
+            <span>Node 1: PDF Parse & Document Section Chunking</span>
+          </div>
+          <div class="pipeline-step" id="step2">
+            <div class="step-bullet"></div>
+            <span>Node 2: Agentic RAG Indexing & Vector Search</span>
+          </div>
+          <div class="pipeline-step" id="step3">
+            <div class="step-bullet"></div>
+            <span>Node 3: Deterministic Fit Scoring & Gap Analysis</span>
+          </div>
+          <div class="pipeline-step" id="step4">
+            <div class="step-bullet"></div>
+            <span>Node 4: Multi-Round Interview Formulation (4 Threads)</span>
+          </div>
+          <div class="pipeline-step" id="step5">
+            <div class="step-bullet"></div>
+            <span>Node 5: Synthesis of Executive Dossier</span>
+          </div>
+        </div>
       </div>
 
       <div id="resultsContent" style="display: none; flex-direction: column; gap: 20px;">
@@ -205,17 +220,6 @@
 
           <div class="questions-stack" id="questionsContainer"></div>
         </div>
-      </div>
-
-      <!-- Clean Empty State -->
-      <div class="empty-view" id="emptyState">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-subtle)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="12" y1="18" x2="12" y2="12"></line>
-          <line x1="9" y1="15" x2="15" y2="15"></line>
-        </svg>
-        <p>No evaluation active. Select a preset candidate above or upload a resume to initiate the 5-node LangGraph analysis.</p>
       </div>
     </section>
   </main>

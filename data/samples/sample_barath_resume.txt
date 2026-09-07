@@ -6,7 +6,7 @@ Kotlin Multiplatform
  
 ·
  
-Full-Stack Backend barathjack77@gmail.com · +91 8015931576 · Trichy · github.com/3DBarath · linkedin.com/in/3dbarath SUMMARY Built and shipped 3 production apps — Android, Desktop, and backend — as a solo engineer still in college. Specializes in 
+Full-Stack Backend barathjack77@gmail.com · Trichy · github.com/3DBarath · linkedin.com/in/3dbarath SUMMARY Built and shipped 3 production apps — Android, Desktop, and backend — as a solo engineer still in college. Specializes in 
 Kotlin Multiplatform and full-stack Android systems,
  
 from custom TCP protocols to distributed Spring Boot backends serving 1,200 daily users.
