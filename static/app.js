@@ -277,9 +277,9 @@ function renderResults(data) {
   const resultsContent = document.getElementById("resultsContent");
   const btnCopyDossier = document.getElementById("btnCopyDossier");
 
-  emptyState.style.display = "none";
-  resultsContent.style.display = "flex";
-  btnCopyDossier.style.display = "inline-flex";
+  if (emptyState) emptyState.style.display = "none";
+  if (resultsContent) resultsContent.style.display = "flex";
+  if (btnCopyDossier) btnCopyDossier.style.display = "inline-flex";
 
   const metrics = data.metrics || {};
   const score = metrics.overall_score || 0;
