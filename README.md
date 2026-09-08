@@ -1,9 +1,12 @@
 # IBM Agentic AI Track: Multi-Round Talent Intelligence & Recruitment Assistant
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black?logo=vercel)](https://barath-agentic-hr.vercel.app/)
 [![TNSDC Virtual Internship Program](https://img.shields.io/badge/TNSDC-IBM%20Agentic%20AI-blue.svg)](https://www.naanmudhalvan.tn.gov.in/)
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-green.svg)](https://python.org)
 [![LangChain](https://img.shields.io/badge/LangChain-v0.2-blue)](https://langchain.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-StateGraph-orange)](https://langchain-ai.github.io/langgraph/)
+
+🔗 **Live Demo:** [https://barath-agentic-hr.vercel.app/](https://barath-agentic-hr.vercel.app/)
 
 An end-to-end Agentic AI recruitment platform designed for the **TNSDC Virtual Internship Program (IBM Agentic AI Track)**. The platform combines **LangChain Tool-Calling**, **LangGraph Workflow Orchestration**, **Agentic RAG Semantic Search**, and **Ollama Cloud LLMs (`gpt-oss:120b`)** to evaluate candidates against job descriptions and formulate tailored, multi-round technical interview kits.
 
